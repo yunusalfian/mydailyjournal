@@ -67,6 +67,16 @@ if (!isset($_SESSION['username'])) {
             <li class="nav-item">
                 <a class="nav-link" href="admin.php?page=article">Article</a>
             </li> 
+            <li class="nav-item">
+                <a class="nav-link" href="admin.php?page=gallery">Gallery</a>
+            </li> 
+            <?php if ($_SESSION['username'] === 'admin'): ?>
+                <li class="nav-item">
+                    <a class="nav-link" href="admin.php?page=user">User</a>
+                </li>
+            <?php endif; ?>
+
+
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle text-danger fw-bold" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <?= $_SESSION['username']?>
@@ -84,16 +94,21 @@ if (!isset($_SESSION['username'])) {
     <section id="content" class="p-5">
         <div class="container">
             <?php
-            if(isset($_GET['page'])){
-            ?>
-                <h4 class="lead display-6 pb-2 border-bottom border-success-subtle"><?= ucfirst($_GET['page'])?></h4>
-                <?php
-                include($_GET['page'].".php");
-            }else{
-            ?>
-                <h4 class="lead display-6 pb-2 border-bottom border-success-subtle">Dashboard</h4>
-                <?php
-                include("dashboard.php");
+            $page = $_GET['page'] ?? 'dashboard';
+
+            // halaman yang hanya boleh diakses admin
+            $admin_only = ['user'];
+
+            // judul halaman
+            echo '<h4 class="lead display-6 pb-2 border-bottom border-success-subtle">'
+                . ucfirst($page) .
+                '</h4>';
+
+            // proteksi akses
+            if (in_array($page, $admin_only) && $_SESSION['username'] !== 'admin') {
+                include('dashboard.php');
+            } else {
+                include($page . '.php');
             }
             ?>
         </div>

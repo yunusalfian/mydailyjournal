@@ -1,4 +1,4 @@
-<?php
+    <?php
 include "koneksi.php"; 
 ?>
 
@@ -21,6 +21,52 @@ include "koneksi.php";
       object-fit: cover;
       border-radius: 50%;
     }
+
+    .isi {
+    transition: 
+    background-color 0.3s ease,
+    color 0.3s ease,
+    border-color 0.3s ease;
+    }
+
+    .table,
+    .table tr,
+    .table td,
+    .table th,
+    .table tbody {
+    transition: 
+    background-color 0.3s ease,
+    color 0.3s ease;
+    }
+
+    .isi {
+    transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .card,
+    .card-header,
+    .card-body,
+    .card-footer {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+    }
+
+    .bg-dark .card {
+    background-color: #212529;
+    color: #ffffff;
+    border-color: #444;
+    }
+
+    .bg-dark .card-header {
+    background-color: #343a40;
+    color: #ffffff;
+    }
+
+    .bg-dark .card-footer {
+    background-color: #2b3035;
+    color: #adb5bd;
+    }
+
+
     </style>
 
 </head>
@@ -83,7 +129,7 @@ include "koneksi.php";
         <!-- profile begin -->
         <section id="profile" class="bg-light isi">
             <div class="container my-5">
-                <h3 class="text-center mb-3">Profil Mahasiswa</h3>
+                <h3 class="text-center mb-3">Profile</h3>
                 <div class="profile-card">
                     <div class="row align-items-center">
                         <div class="col-md-5 text-center mb-3 mb-md-0">
@@ -125,10 +171,10 @@ include "koneksi.php";
         <!-- schedule begin -->
         <section id="schedule" class="text-center py-5">
             <div class="container">
-            <h3 class="mb-3">Jadwal Kuliah & Kegiatan Mahasiswa</h3>
+            <h3 class="mb-3">Schedule</h3>
                 <div class="row row-cols-1 row-cols-md-4 g-4 justify-content-start">
                     <div class="col">
-                        <div class="card border-primary h-100">
+                        <div class="card border-primary h-100 isi">
                             <h6 class="card-header text-white bg-primary">Senin</h6>
                             <div class="card-body">
                                 <p class="card-text">
@@ -143,7 +189,7 @@ include "koneksi.php";
                         </div>
                     </div>
                     <div class="col">
-                        <div class="card border-success h-100">
+                        <div class="card border-success h-100 isi">
                             <h6 class="card-header text-white bg-success">Selasa</h6>
                             <div class="card-body">
                                 <p class="card-text">
@@ -161,7 +207,7 @@ include "koneksi.php";
                         </div>
                     </div>
                     <div class="col">
-                        <div class="card border-danger h-100">
+                        <div class="card border-danger h-100 isi">
                             <h6 class="card-header text-white bg-danger">Rabu</h6>
                             <div class="card-body">
                                 <p class="card-text">
@@ -174,7 +220,7 @@ include "koneksi.php";
                         </div>
                     </div>
                     <div class="col">
-                        <div class="card border-warning h-100">
+                        <div class="card border-warning h-100 isi">
                             <h6 class="card-header text-white bg-warning">Kamis</h6>
                             <div class="card-body">
                                 <p class="card-text">
@@ -189,7 +235,7 @@ include "koneksi.php";
                         </div>
                     </div>
                     <div class="col">
-                        <div class="card border-info h-100">
+                        <div class="card border-info h-100 isi">
                             <h6 class="card-header text-white bg-info">Jumat</h6>
                             <div class="card-body">
                                 <p class="card-text">
@@ -202,7 +248,7 @@ include "koneksi.php";
                         </div>
                     </div>
                     <div class="col">
-                        <div class="card border-secondary h-100">
+                        <div class="card border-secondary h-100 isi">
                             <h6 class="card-header text-white bg-secondary">Sabtu</h6>
                             <div class="card-body">
                                 <p class="card-text">
@@ -213,7 +259,7 @@ include "koneksi.php";
                         </div>
                     </div>
                     <div class="col">
-                        <div class="card border-dark h-100">
+                        <div class="card border-dark h-100 isi">
                             <h6 class="card-header text-white bg-dark">Minggu</h6>
                             <div class="card-body">
                                 <p class="card-text">
@@ -262,34 +308,29 @@ include "koneksi.php";
         </div>
         </section>
         <!-- article end -->
-        
+
         <!-- gallery begin -->
-        <section id="gallery" class="mt-4">
-            <div class="container">
-                <h3 class="mb-3 text-center">Gallery</h3>
-                <div class="row g-3">
-                    <?php
-                    $folder = "gallery/"; 
+        <section id="gallery" class="text-center p-5">
+        <div class="container">
+            <h3 class="text-center mb-3">Gallery</h3>
+            <div class="row row-cols-1 row-cols-md-3 g-4 justify-content-center">
+            <?php
+            $sql = "SELECT * FROM gallery ORDER BY tanggal DESC";
+            $hasil = $conn->query($sql); 
 
-                    $files = glob($folder . "*.{jpg,jpeg,png,gif}", GLOB_BRACE);
-
-                    if(count($files) > 0){
-                        foreach($files as $image){
-                            ?>
-                            <div class="col-4 col-md-2">
-                                <img src="<?php echo $image; ?>" class="img-fluid rounded" alt="Gallery Image">
-                            </div>
-                            <?php
-                        }
-                    } else {
-                        echo '<div class="col-12 text-center text-muted">Belum ada gambar di galeri.</div>';
-                    }
-                    ?>
+            while($row = $hasil->fetch_assoc()){
+            ?>
+                <div class="col-4 col-md-2">
+                    <img src="glr/<?= $row["gambar"]?>" class="img-fluid rounded" alt="..." />
                 </div>
+                <?php
+            }
+            ?> 
             </div>
-        </section>        
+        </div>
+        </section>
         <!-- gallery end -->
-
+        
         <!-- contact begin -->
         <section id="kontak" class="mt-5">
             <div class="container">

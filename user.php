@@ -1,10 +1,15 @@
+<?php
+include "auth_admin.php";
+?>
+
 <div class="container">
-    <!-- Button trigger modal -->
+    
+<!-- Button trigger modal -->
     <button type="button" class="btn btn-secondary mb-2" data-bs-toggle="modal" data-bs-target="#modalTambah">
-        <i class="bi bi-plus-lg"></i> Tambah Article
+        <i class="bi bi-plus-lg"></i> Tambah User
     </button>
     <div class="row">
-        <div class="table-responsive" id="article_data">
+        <div class="table-responsive" id="user_data">
             
         </div>
 
@@ -13,22 +18,22 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Tambah Article</h1>
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Tambah User</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <form method="post" action="" enctype="multipart/form-data">
                         <div class="modal-body">
                             <div class="mb-3">
-                                <label for="formGroupExampleInput" class="form-label">Judul</label>
-                                <input type="text" class="form-control" name="judul" placeholder="Tuliskan Judul Artikel" required>
+                                <label for="formGroupExampleInput" class="form-label">username</label>
+                                <input type="text" class="form-control" name="username" placeholder="Tuliskan Username" required>
                             </div>
                             <div class="mb-3">
-                                <label for="floatingTextarea2">Isi</label>
-                                <textarea class="form-control" placeholder="Tuliskan Isi Artikel" name="isi" required></textarea>
+                                <label for="floatingTextarea2">Password</label>
+                                <textarea class="form-control" placeholder="Tuliskan Password" name="password" required></textarea>
                             </div>
                             <div class="mb-3">
-                                <label for="formGroupExampleInput2" class="form-label">Gambar</label>
-                                <input type="file" class="form-control" name="gambar">
+                                <label for="formGroupExampleInput2" class="form-label">Foto</label>
+                                <input type="file" class="form-control" name="foto">
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -49,13 +54,13 @@ $(document).ready(function(){
     load_data();        
     function load_data(hlm){
         $.ajax({
-            url : "article_data.php",
+            url : "user_data.php",
             method : "POST",
             data : {
 					            hlm: hlm
 				           },
             success : function(data){
-                    $('#article_data').html(data);
+                    $('#user_data').html(data);
             }
         })
     } 
@@ -71,18 +76,16 @@ $(document).ready(function(){
 include "upload_foto.php";
 
 if (isset($_POST['simpan'])) {
-    $judul = $_POST['judul'];
-    $isi = $_POST['isi'];
-    $tanggal = date("Y-m-d H:i:s");
-    $username = $_SESSION['username'];
-    $gambar = '';
-    $nama_gambar = $_FILES['gambar']['name'];
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+    $foto = '';
+    $nama_foto = $_FILES['foto']['name'];
 
-    if ($nama_gambar != '') {
-        $cek_upload = upload_foto($_FILES["gambar"]);
+    if ($nama_foto != '') {
+        $cek_upload = upload_foto($_FILES["foto"]);
 
         if ($cek_upload['status']) {
-            $gambar = $cek_upload['message'];
+            $foto = $cek_upload['message'];
         } else {
             echo "<script>
                 alert('" . $cek_upload['message'] . "');
@@ -95,40 +98,38 @@ if (isset($_POST['simpan'])) {
     if (isset($_POST['id'])) {
         $id = $_POST['id'];
 
-        if ($nama_gambar == '') {
-            $gambar = $_POST['gambar_lama'];
+        if ($nama_foto == '') {
+            $foto = $_POST['foto_lama'];
         } else {
-            unlink("img/" . $_POST['gambar_lama']);
+            unlink("img/" . $_POST['foto_lama']);
         }
 
-        $stmt = $conn->prepare("UPDATE article 
+        $stmt = $conn->prepare("UPDATE user 
                                 SET 
-                                judul =?,
-                                isi =?,
-                                gambar = ?,
-                                tanggal = ?,
-                                username = ?
+                                username =?,
+                                password = ?,
+                                foto = ?
                                 WHERE id = ?");
 
-        $stmt->bind_param("sssssi", $judul, $isi, $gambar, $tanggal, $username, $id);
+        $stmt->bind_param("sssssi", $username, $password, $foto, $username, $id);
         $simpan = $stmt->execute();
     } else {
-        $stmt = $conn->prepare("INSERT INTO article (judul,isi,gambar,tanggal,username)
-                                VALUES (?,?,?,?,?)");
+        $stmt = $conn->prepare("INSERT INTO user (username,password,foto)
+                                VALUES (?,?,?)");
 
-        $stmt->bind_param("sssss", $judul, $isi, $gambar, $tanggal, $username);
+        $stmt->bind_param("sss", $username, $password, $foto);
         $simpan = $stmt->execute();
     }
 
     if ($simpan) {
         echo "<script>
             alert('Simpan data sukses');
-            document.location='admin.php?page=article';
+            document.location='admin.php?page=user';
         </script>";
     } else {
         echo "<script>
             alert('Simpan data gagal');
-            document.location='admin.php?page=article';
+            document.location='admin.php?page=user';
         </script>";
     }
 
@@ -138,13 +139,13 @@ if (isset($_POST['simpan'])) {
 
 if (isset($_POST['hapus'])) {
     $id = $_POST['id'];
-    $gambar = $_POST['gambar'];
+    $foto = $_POST['foto'];
 
-    if ($gambar != '') {
-        unlink("img/" . $gambar);
+    if ($foto != '') {
+        unlink("img/" . $foto);
     }
 
-    $stmt = $conn->prepare("DELETE FROM article WHERE id =?");
+    $stmt = $conn->prepare("DELETE FROM user WHERE id =?");
 
     $stmt->bind_param("i", $id);
     $hapus = $stmt->execute();
@@ -152,12 +153,12 @@ if (isset($_POST['hapus'])) {
     if ($hapus) {
         echo "<script>
             alert('Hapus data sukses');
-            document.location='admin.php?page=article';
+            document.location='admin.php?page=user';
         </script>";
     } else {
         echo "<script>
             alert('Hapus data gagal');
-            document.location='admin.php?page=article';
+            document.location='admin.php?page=user';
         </script>";
     }
 
