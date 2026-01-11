@@ -42,6 +42,7 @@
                             <td>
                                 <a href="#" title="edit" class="badge rounded-pill text-bg-success" data-bs-toggle="modal" data-bs-target="#modalEdit<?= $row["id"] ?>"><i class="bi bi-pencil"></i></a>
                                 <a href="#" title="delete" class="badge rounded-pill text-bg-danger" data-bs-toggle="modal" data-bs-target="#modalHapus<?= $row["id"] ?>"><i class="bi bi-x-circle"></i></a>
+                                
                                 <!-- Awal Modal Edit -->
                                 <div class="modal fade" id="modalEdit<?= $row["id"] ?>" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                                     <div class="modal-dialog">
@@ -123,7 +124,7 @@ $total_records = $hasil1->num_rows;
     <ul class="pagination justify-content-end">
     <?php
         $jumlah_page = ceil($total_records / $limit);
-        $jumlah_number = 1; //jumlah halaman ke kanan dan kiri dari halaman yang aktif
+        $jumlah_number = 1; 
         $start_number = ($hlm > $jumlah_number)? $hlm - $jumlah_number : 1;
         $end_number = ($hlm < ($jumlah_page - $jumlah_number))? $hlm + $jumlah_number : $jumlah_page;
 
