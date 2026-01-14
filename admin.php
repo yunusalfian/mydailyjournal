@@ -69,7 +69,7 @@ if (!isset($_SESSION['username'])) {
             <li class="nav-item">
                 <a class="nav-link" href="admin.php?page=gallery">Gallery</a>
             </li> 
-            <?php if ($_SESSION['username'] === 'admin'): ?>
+            <?php if ($_SESSION['username'] === 'danny'): ?>
                 <li class="nav-item">
                     <a class="nav-link" href="admin.php?page=user">User</a>
                 </li>
@@ -101,7 +101,7 @@ if (!isset($_SESSION['username'])) {
                 . ucfirst($page) .
                 '</h4>';
 
-            if (in_array($page, $admin_only) && $_SESSION['username'] !== 'admin') {
+            if (in_array($page, $admin_only) && $_SESSION['username'] !== 'danny') {
                 include('dashboard.php');
             } else {
                 include($page . '.php');
